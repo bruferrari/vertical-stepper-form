@@ -58,6 +58,7 @@ public class VerticalStepperFormLayout extends RelativeLayout implements View.On
     protected boolean showVerticalLineWhenStepsAreCollapsed;
     protected boolean confirmationStepEnabled;
     protected boolean defaultNextButtonEnabled;
+    protected boolean showStepNumber;
 
 
     // Views
@@ -397,6 +398,7 @@ public class VerticalStepperFormLayout extends RelativeLayout implements View.On
         this.showVerticalLineWhenStepsAreCollapsed = false;
         this.defaultNextButtonEnabled = true;
         this.confirmationStepEnabled = true;
+        this.showStepNumber = false;
 
         this.verticalStepperFormImplementation = verticalStepperForm;
         this.activity = activity;
@@ -433,7 +435,7 @@ public class VerticalStepperFormLayout extends RelativeLayout implements View.On
                                               int buttonBackgroundColor, int buttonTextColor,
                                               int buttonPressedBackgroundColor, int buttonPressedTextColor,
                                               int stepNumberBackgroundColor, int stepNumberTextColor,
-                                              VerticalStepperForm verticalStepperForm,
+                                              boolean showStepNumber, VerticalStepperForm verticalStepperForm,
                                               Activity activity) {
 
         this.alphaOfDisabledElements = 0.25f;
@@ -452,6 +454,7 @@ public class VerticalStepperFormLayout extends RelativeLayout implements View.On
         this.showVerticalLineWhenStepsAreCollapsed = false;
         this.defaultNextButtonEnabled = true;
         this.confirmationStepEnabled = true;
+        this.showStepNumber = false;
 
         this.verticalStepperFormImplementation = verticalStepperForm;
         this.activity = activity;
@@ -480,6 +483,7 @@ public class VerticalStepperFormLayout extends RelativeLayout implements View.On
         this.showVerticalLineWhenStepsAreCollapsed = builder.showVerticalLineWhenStepsAreCollapsed;
         this.defaultNextButtonEnabled = builder.defaultNextButtonEnabled;
         this.confirmationStepEnabled = builder.confirmationStepEnabled;
+        this.showStepNumber = builder.showStepNumber;
 
         initStepperForm(builder.steps, builder.stepsSubtitles);
     }
@@ -633,8 +637,8 @@ public class VerticalStepperFormLayout extends RelativeLayout implements View.On
         stepsSubtitlesViews.add(stepNumber, stepSubtitle);
 
         TextView stepNumberTextView = (TextView) stepLayout.findViewById(R.id.step_number);
-        stepNumberTextView.setText(String.valueOf(stepNumber + 1));
-        stepNumberTextView.setTextColor(stepNumberTextColor);
+
+        hideStepsNumbersIfNecessary(stepNumber, stepNumberTextView);
 
         ImageView stepDoneImageView = (ImageView) stepLayout.findViewById(R.id.step_done);
         stepDoneImageView.setColorFilter(stepNumberTextColor);
@@ -819,6 +823,13 @@ public class VerticalStepperFormLayout extends RelativeLayout implements View.On
         // The height of the line will be 0 when the subtitle text is being shown
         if(showVerticalLineWhenStepsAreCollapsed) {
             setVerticalLineNearSubtitleHeightWhenSubtitleIsGone(stepLayout, 0);
+        }
+    }
+
+    protected void hideStepsNumbersIfNecessary(int stepNumber, TextView numberView) {
+        if (showStepNumber) {
+            numberView.setText(String.valueOf(stepNumber + 1));
+            numberView.setTextColor(stepNumberTextColor);
         }
     }
 
@@ -1058,6 +1069,7 @@ public class VerticalStepperFormLayout extends RelativeLayout implements View.On
         protected boolean showVerticalLineWhenStepsAreCollapsed = false;
         protected boolean confirmationStepEnabled = true;
         protected boolean defaultNextButtonEnabled = true;
+        protected boolean showStepNumber = false;
 
         protected Builder(VerticalStepperFormLayout stepperLayout,
                           String[] steps,
@@ -1281,6 +1293,11 @@ public class VerticalStepperFormLayout extends RelativeLayout implements View.On
          */
         public Builder defaultNextButtonEnabled(boolean enabled) {
             this.defaultNextButtonEnabled = enabled;
+            return this;
+        }
+
+        public Builder showStepNumber(boolean enabled) {
+            this.showStepNumber = enabled;
             return this;
         }
 
